@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>生词记录助手</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="popup-container">
+    <div class="popup-header">
+      <h3>📚 生词记录助手</h3>
+    </div>
+    
+    <div class="popup-content">
+      <!-- 快速查询区域 -->
+      <div class="section">
+        <div class="input-group">
+          <input type="text" id="quickSearch" placeholder="输入单词快速查询..." autocomplete="off">
+          <button id="searchBtn" class="btn btn-primary">查询</button>
+        </div>
+      </div>
+      
+      <!-- 最近添加的生词 -->
+      <div class="section">
+        <h4>最近添加</h4>
+        <div id="recentWords" class="word-list">
+          <div class="loading">加载中...</div>
+        </div>
+      </div>
+      
+      <!-- 统计信息 -->
+      <div class="section">
+        <div class="stats">
+          <div class="stat-item">
+            <span class="stat-number" id="totalWords">-</span>
+            <span class="stat-label">总词汇</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number" id="todayWords">-</span>
+            <span class="stat-label">今日新增</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 操作按钮 -->
+      <div class="section">
+        <div class="button-group">
+          <button id="openWebApp" class="btn btn-secondary">
+            🌐 打开生词管理
+          </button>
+          <button id="openSettings" class="btn btn-secondary">
+            ⚙️ 设置
+          </button>
+        </div>
+      </div>
+      
+      <!-- 使用提示 -->
+      <div class="section tips">
+        <h4>使用提示</h4>
+        <ul>
+          <li>在网页中选中单词，自动显示释义</li>
+          <li>点击"添加到生词本"保存单词</li>
+          <li>使用快捷键 Ctrl+Shift+V 快速添加</li>
+          <li>右键菜单也可以添加选中的单词</li>
+        </ul>
+      </div>
+    </div>
+    
+    <!-- 查询结果弹窗 -->
+    <div id="searchResult" class="modal" style="display: none;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 id="resultWord"></h4>
+          <button id="closeModal" class="close-btn">×</button>
+        </div>
+        <div class="modal-body">
+          <div id="resultContent"></div>
+        </div>
+        <div class="modal-footer">
+          <button id="addWordBtn" class="btn btn-primary">添加到生词本</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script src="popup.js"></script>
+</body>
+</html>

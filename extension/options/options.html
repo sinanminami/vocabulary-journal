@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>生词记录助手 - 设置</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, rgba(10, 10, 10, 1), rgba(20, 20, 20, 1));
+      padding: 20px;
+      line-height: 1.6;
+      color: #e5e7eb;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: linear-gradient(135deg, rgba(20, 20, 20, 0.95), rgba(30, 30, 30, 0.95));
+      border-radius: 16px;
+      box-shadow: 0 25px 50px rgba(0,0,0,0.5), 0 0 0 1px rgba(29, 185, 84, 0.1);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(29, 185, 84, 0.2);
+      overflow: hidden;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #1db954 0%, #1ed760 100%);
+      color: white;
+      padding: 30px;
+      text-align: center;
+    }
+    
+    .header h1 {
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+    
+    .content {
+      padding: 30px;
+    }
+    
+    .section {
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid rgba(29, 185, 84, 0.2);
+    }
+
+    .section:last-child {
+      border-bottom: none;
+    }
+
+    .section h2 {
+      font-size: 18px;
+      margin-bottom: 15px;
+      color: #1db954;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: #e5e7eb;
+    }
+
+    .form-group input[type="text"],
+    .form-group input[type="url"] {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid rgba(29, 185, 84, 0.3);
+      border-radius: 6px;
+      font-size: 14px;
+      background: rgba(255, 255, 255, 0.05);
+      color: #e5e7eb;
+      transition: border-color 0.2s;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: #1db954;
+    }
+
+    .form-group input[type="checkbox"] {
+      margin-right: 8px;
+      accent-color: #1db954;
+    }
+
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .help-text {
+      font-size: 13px;
+      color: #9ca3af;
+      margin-top: 5px;
+    }
+
+    .btn {
+      background: linear-gradient(135deg, #1db954, #1ed760);
+      color: white;
+      border: 1px solid rgba(29, 185, 84, 0.5);
+      padding: 10px 20px;
+      border-radius: 6px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn:hover {
+      background: linear-gradient(135deg, #1ed760, #1db954);
+      box-shadow: 0 4px 12px rgba(29, 185, 84, 0.3);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.1);
+      color: #9ca3af;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+    }
+    
+    .status {
+      padding: 10px 15px;
+      border-radius: 6px;
+      margin-top: 15px;
+      display: none;
+    }
+    
+    .status.success {
+      background: #dcfce7;
+      color: #166534;
+      border: 1px solid #bbf7d0;
+    }
+    
+    .status.error {
+      background: #fef2f2;
+      color: #dc2626;
+      border: 1px solid #fecaca;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>📚 生词记录助手</h1>
+      <p>配置扩展设置以获得最佳体验</p>
+    </div>
+    
+    <div class="content">
+      <div class="section">
+        <h2>服务器设置</h2>
+        <div class="form-group">
+          <label for="apiUrl">API服务器地址:</label>
+          <input type="url" id="apiUrl" placeholder="http://localhost:8000">
+          <div class="help-text">后端API服务的地址，默认为本地开发服务器</div>
+        </div>
+        
+        <div class="form-group">
+          <label for="webUrl">Web管理界面地址:</label>
+          <input type="url" id="webUrl" placeholder="http://localhost:5173">
+          <div class="help-text">生词管理网页的地址</div>
+        </div>
+      </div>
+      
+      <div class="section">
+        <h2>字典API设置</h2>
+        <div class="form-group">
+          <label for="dictionaryProvider">选择字典API提供商:</label>
+          <select id="dictionaryProvider" style="width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px;">
+            <option value="free_dictionary">Free Dictionary API (免费)</option>
+            <option value="microsoft">Microsoft Translator (需要密钥)</option>
+          </select>
+          <div class="help-text">选择用于查询单词释义的API服务</div>
+        </div>
+        
+        <div id="microsoftConfig" style="display: none;">
+          <div class="form-group">
+            <label for="microsoftKey">Microsoft Translator 订阅密钥:</label>
+            <input type="text" id="microsoftKey" placeholder="请输入您的Microsoft Translator API密钥">
+            <div class="help-text">从Azure门户获取您的Microsoft Translator订阅密钥</div>
+          </div>
+          
+          <div class="form-group">
+            <label for="microsoftRegion">区域 (可选):</label>
+            <input type="text" id="microsoftRegion" placeholder="例如: eastus, westus2">
+            <div class="help-text">如果使用多服务资源，请指定区域</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="section">
+        <h2>功能设置</h2>
+        <div class="checkbox-group">
+          <input type="checkbox" id="enableAutoLookup">
+          <label for="enableAutoLookup">启用自动查词</label>
+        </div>
+        <div class="help-text">选中文本时自动显示释义提示</div>
+        
+        <div class="checkbox-group">
+          <input type="checkbox" id="showTooltip">
+          <label for="showTooltip">显示悬浮提示</label>
+        </div>
+        <div class="help-text">查询结果以悬浮窗口形式显示</div>
+        
+        <div class="checkbox-group">
+          <input type="checkbox" id="enableKeyboardShortcut">
+          <label for="enableKeyboardShortcut">启用快捷键</label>
+        </div>
+        <div class="help-text">使用 Ctrl+Shift+V 快速添加选中的单词</div>
+      </div>
+      
+      <div class="section">
+        <h2>使用说明</h2>
+        <div class="help-text">
+          <p><strong>基本功能:</strong></p>
+          <ul style="margin-left: 20px; margin-top: 10px;">
+            <li>在网页中选中英文单词，会自动显示释义</li>
+            <li>点击"添加到生词本"按钮保存单词</li>
+            <li>右键菜单中也可以添加选中的单词</li>
+            <li>使用扩展图标打开生词管理页面</li>
+          </ul>
+          
+          <p style="margin-top: 15px;"><strong>快捷键:</strong></p>
+          <ul style="margin-left: 20px; margin-top: 10px;">
+            <li>Ctrl+Shift+V: 添加选中单词到生词本</li>
+            <li>Esc: 关闭释义提示窗口</li>
+          </ul>
+        </div>
+      </div>
+      
+      <div style="text-align: center; margin-top: 30px;">
+        <button id="saveBtn" class="btn">保存设置</button>
+        <button id="resetBtn" class="btn btn-secondary" style="margin-left: 10px;">恢复默认</button>
+      </div>
+      
+      <div id="status" class="status"></div>
+    </div>
+  </div>
+  
+  <script src="options.js"></script>
+</body>
+</html>

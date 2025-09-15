@@ -1,0 +1,22 @@
+{
+  "name": "vocabulary-recorder",
+  "version": "1.0.0",
+  "description": "一键记录生词的浏览器扩展和管理系统",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "extension"
+  ],
+  "scripts": {
+    "dev:backend": "cd backend && uvicorn main:app --reload --port 8000",
+    "dev:frontend": "cd frontend && npm run dev",
+    "build:all": "npm run build --workspaces",
+    "dev:all": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\""
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

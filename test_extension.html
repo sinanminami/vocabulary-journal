@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>扩展功能测试</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test-area { background: #f5f5f5; padding: 20px; margin: 20px 0; }
+        button { padding: 10px 20px; margin: 10px; background: #007cba; color: white; border: none; border-radius: 5px; }
+        .result { margin: 10px 0; padding: 10px; border-radius: 5px; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+    </style>
+</head>
+<body>
+    <h1>生词记录扩展测试页面</h1>
+    
+    <div class="test-area">
+        <h2>测试步骤：</h2>
+        <p>1. 选中下面的单词：<strong>beautiful</strong></p>
+        <p>2. 右键选择"添加到生词本"</p>
+        <p>3. 或者选中后按 Ctrl+Shift+V</p>
+        
+        <div style="font-size: 18px; line-height: 2;">
+            This is a <strong>beautiful</strong> day for testing the vocabulary extension. 
+            You can also try words like <strong>amazing</strong>, <strong>wonderful</strong>, or <strong>excellent</strong>.
+        </div>
+    </div>
+    
+    <div class="test-area">
+        <h2>手动API测试：</h2>
+        <button onclick="testAPI()">测试API连接</button>
+        <button onclick="addTestWord()">手动添加测试单词</button>
+        <div id="apiResult"></div>
+    </div>
+    
+    <script>
+        async function testAPI() {
+            const resultDiv = document.getElementById('apiResult');
+            try {
+                const response = await fetch('http://localhost:8000/');
+                const data = await response.json();
+                resultDiv.innerHTML = `<div class="result success">✅ API连接成功: ${data.message}</div>`;
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="result error">❌ API连接失败: ${error.message}</div>`;
+            }
+        }
+        
+        async function addTestWord() {
+            const resultDiv = document.getElementById('apiResult');
+            try {
+                const response = await fetch('http://localhost:8000/api/words', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        word: 'example',
+                        source_url: window.location.href,
+                        source_context: '从测试页面添加'
+                    })
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    resultDiv.innerHTML = `<div class="result success">✅ 单词添加成功: ${data.word}</div>`;
+                } else {
+                    resultDiv.innerHTML = `<div class="result error">❌ 添加失败: ${response.status}</div>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="result error">❌ 请求失败: ${error.message}</div>`;
+            }
+        }
+    </script>
+</body>
+</html>

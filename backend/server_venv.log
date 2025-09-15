@@ -1,0 +1,136 @@
+INFO:     Will watch for changes in these directories: ['/Users/sinan/project_claude/backend']
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:     Started reloader process [43288] using WatchFiles
+INFO:     Started server process [43296]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     127.0.0.1:50519 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50561 - "POST /api/words HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50593 - "GET /api/words?limit=100&search=multimodality HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50709 - "GET /api/words?limit=100 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50711 - "OPTIONS /api/words/1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50711 - "DELETE /api/words/1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50711 - "GET /api/words?limit=100 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50734 - "POST /api/words HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50739 - "GET /api/words?limit=100 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50739 - "GET /api/words?limit=100 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50739 - "GET /api/words?limit=100 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50739 - "OPTIONS /api/words/2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50739 - "DELETE /api/words/2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50739 - "GET /api/words?limit=100 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50739 - "OPTIONS /api/words/3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50739 - "DELETE /api/words/3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50739 - "GET /api/words?limit=100 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50739 - "OPTIONS /api/words/4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50739 - "DELETE /api/words/4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50739 - "GET /api/words?limit=100 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50757 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50779 - "GET /api/words/godaddy/lookup HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50779 - "GET /api/words/godaddy/lookup HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50779 - "GET /api/words/namesilo/lookup HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50866 - "GET /api/words?limit=100 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51182 - "GET /api/words?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51184 - "GET /api/words?limit=1000 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51177 - "POST /api/words HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51225 - "GET /api/words?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51227 - "GET /api/words?limit=1000 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51642 - "GET /api/words?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51643 - "GET /api/words?limit=1000 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51685 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51832 - "GET /api/words/hello/lookup HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51869 - "GET /api/words/hello/lookup HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51878 - "GET /api/words/world/lookup HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51878 - "GET /api/words/computer/lookup HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51878 - "GET /api/words/language/lookup HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51878 - "GET /api/words/programming/lookup HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51878 - "GET /api/words/thinking/lookup HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51878 - "GET /api/words/quick-thinking/lookup HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51878 - "GET /api/words/javascript/lookup HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:51878 - "GET /api/words/javascript/lookup HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:51878 - "GET /api/words/javascript/lookup HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52032 - "GET /api/words/amazing/lookup HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52032 - "GET /api/words/revolutionized/lookup HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52032 - "GET /api/words/unprecedented/lookup HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52474 - "GET /api/words/javascript/lookup HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52798 - "GET /api/words/deploy/lookup HTTP/1.1" 200 OK
+WARNING:  WatchFiles detected changes in 'main.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [43296]
+INFO:     Started server process [44091]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     127.0.0.1:54275 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54322 - "GET /api/words/javascript/lookup HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54391 - "GET /api/words/react/lookup HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54423 - "GET /api/words/python/lookup HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54439 - "GET /api/words/hello/lookup HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54519 - "GET /api/words/nodejs/lookup HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55552 - "GET /api/words?limit=100 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55588 - "GET /api/words?limit=100 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55606 - "GET /api/words?limit=100&search=multimodality HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55650 - "GET /api/words?limit=100&search=multimodality HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55674 - "GET /api/words?limit=100&search=multimodality HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55843 - "GET /api/words?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55844 - "GET /api/words?limit=1000 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55860 - "GET /api/words?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55861 - "GET /api/words?limit=1000 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56270 - "GET /api/words?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56272 - "GET /api/words?limit=1000 HTTP/1.1" 200 OK
+WARNING:  WatchFiles detected changes in 'main.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [44091]
+INFO:     Started server process [45281]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'main.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [45281]
+INFO:     Started server process [45304]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'main.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [45304]
+INFO:     Started server process [45322]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'main.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [45322]
+INFO:     Started server process [45348]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'main.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [45348]
+INFO:     Started server process [45384]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'main.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [45384]
+INFO:     Started server process [45403]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'main.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [45403]
+INFO:     Started server process [45425]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.

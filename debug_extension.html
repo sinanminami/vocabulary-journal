@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>扩展功能调试页面</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            padding: 30px;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .test-section { 
+            background: #f8f9fa; 
+            padding: 20px; 
+            margin: 20px 0; 
+            border-radius: 8px;
+            border-left: 4px solid #007cba;
+        }
+        .word-highlight {
+            font-weight: bold;
+            color: #d73527;
+            background: #fff3cd;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        button { 
+            padding: 10px 20px; 
+            margin: 10px; 
+            background: #007cba; 
+            color: white; 
+            border: none; 
+            border-radius: 5px; 
+            cursor: pointer;
+        }
+        button:hover { background: #005a8b; }
+        .debug-info {
+            background: #e9ecef;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 14px;
+            margin: 10px 0;
+        }
+        .instructions {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 生词记录扩展调试页面</h1>
+    
+    <div class="instructions">
+        <h3>📋 测试说明：</h3>
+        <ol>
+            <li><strong>确保扩展已重新加载</strong>：打开 chrome://extensions/ → 刷新 "Vocab Recorder"</li>
+            <li><strong>打开开发者工具</strong>：按F12 → 点击"Console"标签查看日志</li>
+            <li><strong>测试划词功能</strong>：选中下面的单词，应该自动显示释义悬浮窗</li>
+            <li><strong>检查日志</strong>：在控制台中查看详细的调试信息</li>
+        </ol>
+    </div>
+
+    <div class="test-section">
+        <h2>🎯 基础单词测试</h2>
+        <p>请尝试选中以下单词（逐个测试）：</p>
+        <div style="font-size: 18px; line-height: 2.5;">
+            <span class="word-highlight">hello</span> 
+            <span class="word-highlight">world</span> 
+            <span class="word-highlight">computer</span> 
+            <span class="word-highlight">language</span> 
+            <span class="word-highlight">programming</span>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>🔤 复杂词汇测试</h2>
+        <p>测试包含标点符号和不同形式的单词：</p>
+        <div style="font-size: 16px; line-height: 2;">
+            The <span class="word-highlight">quick-thinking</span> developer wrote 
+            <span class="word-highlight">JavaScript</span> code. 
+            She said, "<span class="word-highlight">amazing</span>!" when it worked. 
+            The <span class="word-highlight">user-friendly</span> interface was 
+            <span class="word-highlight">well-designed</span>.
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>📰 真实文本测试</h2>
+        <p>模拟真实网页环境：</p>
+        <div style="font-size: 14px; line-height: 1.8; text-align: justify;">
+            Artificial intelligence has <span class="word-highlight">revolutionized</span> the way we 
+            <span class="word-highlight">interact</span> with technology. Modern 
+            <span class="word-highlight">algorithms</span> can process vast amounts of data and provide 
+            <span class="word-highlight">sophisticated</span> insights. The <span class="word-highlight">implementation</span> 
+            of machine learning techniques has enabled <span class="word-highlight">unprecedented</span> 
+            advances in various fields, from healthcare to <span class="word-highlight">autonomous</span> vehicles.
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>🛠️ 功能测试工具</h2>
+        <button onclick="testExtensionStatus()">检查扩展状态</button>
+        <button onclick="testAPIConnection()">测试API连接</button>
+        <button onclick="clearConsole()">清空控制台</button>
+        
+        <div id="debugOutput" class="debug-info">
+            调试信息将显示在这里...
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>🔍 常见问题排查</h2>
+        <ul>
+            <li><strong>没有悬浮窗显示</strong>：检查控制台是否有"VocabularyRecorder 初始化完成"消息</li>
+            <li><strong>查询失败</strong>：确认后端服务运行在 localhost:8000</li>
+            <li><strong>选择无效果</strong>：检查是否有"文本选择事件触发"日志</li>
+            <li><strong>Runtime错误</strong>：重新加载扩展并刷新页面</li>
+        </ul>
+    </div>
+
+    <script>
+        function updateDebugOutput(message) {
+            const output = document.getElementById('debugOutput');
+            const timestamp = new Date().toLocaleTimeString();
+            output.innerHTML += `[${timestamp}] ${message}<br>`;
+            output.scrollTop = output.scrollHeight;
+        }
+
+        function testExtensionStatus() {
+            updateDebugOutput('检查扩展状态...');
+            
+            if (typeof chrome !== 'undefined' && chrome.runtime) {
+                updateDebugOutput('✅ Chrome runtime 可用');
+                
+                // 测试与background script的通信
+                chrome.runtime.sendMessage({type: 'PING'}, (response) => {
+                    if (chrome.runtime.lastError) {
+                        updateDebugOutput('❌ 扩展通信失败: ' + chrome.runtime.lastError.message);
+                    } else {
+                        updateDebugOutput('✅ 扩展通信正常');
+                    }
+                });
+            } else {
+                updateDebugOutput('❌ Chrome runtime 不可用');
+            }
+        }
+
+        function testAPIConnection() {
+            updateDebugOutput('测试API连接...');
+            
+            fetch('http://localhost:8000/')
+                .then(response => response.json())
+                .then(data => {
+                    updateDebugOutput('✅ API连接成功: ' + data.message);
+                })
+                .catch(error => {
+                    updateDebugOutput('❌ API连接失败: ' + error.message);
+                });
+        }
+
+        function clearConsole() {
+            document.getElementById('debugOutput').innerHTML = '控制台已清空...<br>';
+            console.clear();
+        }
+
+        // 页面加载完成后自动检查
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                updateDebugOutput('页面加载完成，开始自动检查...');
+                testExtensionStatus();
+                testAPIConnection();
+            }, 1000);
+        });
+
+        // 监听选择事件（用于调试）
+        document.addEventListener('mouseup', (e) => {
+            const selection = window.getSelection();
+            const selectedText = selection.toString().trim();
+            if (selectedText) {
+                updateDebugOutput(`📝 检测到文本选择: "${selectedText}"`);
+            }
+        });
+    </script>
+</body>
+</html>

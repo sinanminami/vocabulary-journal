@@ -61,24 +61,47 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
 
 // 处理来自内容脚本的消息
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  console.log("Background收到消息:", message);
+
   switch (message.type) {
     case "LOOKUP_WORD":
+      console.log("处理LOOKUP_WORD消息:", message.word);
       handleWordLookup(message.word)
-        .then(definition => sendResponse({ success: true, data: definition }))
-        .catch(error => sendResponse({ success: false, error: error.message }));
+        .then(definition => {
+          console.log("LOOKUP_WORD成功:", definition);
+          sendResponse({ success: true, data: definition });
+        })
+        .catch(error => {
+          console.error("LOOKUP_WORD失败:", error);
+          sendResponse({ success: false, error: error.message });
+        });
       return true; // 保持消息通道开放
-      
+
     case "ADD_WORD":
+      console.log("处理ADD_WORD消息:", message.word, message.context);
       addWordToVocabulary(message.word, message.context)
-        .then(() => sendResponse({ success: true }))
-        .catch(error => sendResponse({ success: false, error: error.message }));
+        .then((result) => {
+          console.log("ADD_WORD成功:", result);
+          sendResponse({ success: true, data: result });
+        })
+        .catch(error => {
+          console.error("ADD_WORD失败:", error);
+          sendResponse({ success: false, error: error.message });
+        });
       return true;
-      
+
     case "GET_SETTINGS":
+      console.log("处理GET_SETTINGS消息");
       chrome.storage.sync.get(null, (settings) => {
+        console.log("设置获取成功:", settings);
         sendResponse({ success: true, data: settings });
       });
       return true;
+
+    default:
+      console.log("未知消息类型:", message.type);
+      sendResponse({ success: false, error: "未知消息类型" });
+      return false;
   }
 });
 

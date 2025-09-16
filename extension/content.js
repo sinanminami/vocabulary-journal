@@ -36,21 +36,34 @@ class VocabularyRecorder {
   bindEvents() {
     // 文本选择事件
     document.addEventListener("mouseup", this.handleTextSelection.bind(this));
-    
+
     // 键盘快捷键
     document.addEventListener("keydown", this.handleKeyboard.bind(this));
-    
+
     // 点击其他地方隐藏提示
-    document.addEventListener("click", this.hideTooltip.bind(this));
+    document.addEventListener("click", (e) => {
+      // 如果点击的是tooltip内部，不隐藏
+      if (this.tooltip && this.tooltip.contains(e.target)) {
+        return;
+      }
+      this.hideTooltip();
+    });
   }
   
   async handleTextSelection(event) {
     try {
       console.log("文本选择事件触发", {
         enabled: this.isEnabled,
-        autoLookup: this.settings?.enableAutoLookup
+        autoLookup: this.settings?.enableAutoLookup,
+        eventTarget: event.target?.tagName || 'unknown'
       });
-      
+
+      // 如果点击的是tooltip内部的元素，不处理文本选择
+      if (this.tooltip && this.tooltip.contains(event.target)) {
+        console.log("点击在tooltip内部，跳过文本选择处理");
+        return;
+      }
+
       if (!this.isEnabled || !this.settings?.enableAutoLookup) {
         console.log("功能未启用，跳过处理");
         return;
@@ -162,32 +175,61 @@ class VocabularyRecorder {
     });
   }
   
-  async addWordToVocabulary() {
-    if (!this.selectedText) return;
-    
+  async addWordToVocabulary(wordToAdd = null) {
+    // 使用传入的单词或默认使用selectedText
+    const targetWord = wordToAdd || this.selectedText;
+
+    if (!targetWord) {
+      console.log("没有找到要添加的单词");
+      this.showErrorMessage();
+      return;
+    }
+
+    console.log("准备添加单词到生词本:", targetWord);
+
     const context = {
       sourceUrl: window.location.href,
       sourceContext: this.getSelectionContext()
     };
-    
+
     try {
       await new Promise((resolve, reject) => {
+        console.log("发送ADD_WORD消息:", {
+          type: "ADD_WORD",
+          word: targetWord,
+          context: context
+        });
+
         chrome.runtime.sendMessage({
           type: "ADD_WORD",
-          word: this.selectedText,
+          word: targetWord,
           context: context
         }, (response) => {
-          if (response.success) {
-            resolve();
+          console.log("收到ADD_WORD响应:", response);
+
+          // 检查runtime错误
+          if (chrome.runtime.lastError) {
+            console.error("Runtime error:", chrome.runtime.lastError);
+            reject(new Error(chrome.runtime.lastError.message));
+            return;
+          }
+
+          if (response && response.success) {
+            console.log("添加成功，返回数据:", response.data);
+            resolve(response.data);
           } else {
-            reject(new Error(response.error));
+            const errorMsg = response?.error || "添加失败";
+            console.error("添加失败:", errorMsg);
+            reject(new Error(errorMsg));
           }
         });
       });
-      
+
+      console.log("单词添加成功，显示成功消息");
       this.showSuccessMessage();
+      this.hideTooltip();
     } catch (error) {
-      console.error("添加失败:", error);
+      console.error("添加单词失败:", error);
       this.showErrorMessage();
     }
   }
@@ -229,9 +271,9 @@ class VocabularyRecorder {
   
   showDefinitionTooltip(definition, rect) {
     this.hideTooltip();
-    
+
     this.tooltip = this.createTooltip();
-    
+
     // 构建释义HTML
     const definitionsHtml = definition.definitions
       .slice(0, 3) // 只显示前3个释义
@@ -241,7 +283,7 @@ class VocabularyRecorder {
           <span class="vocab-meaning">${def.meaning}</span>
         </div>
       `).join("");
-    
+
     this.tooltip.innerHTML = `
       <div class="vocab-tooltip-content">
         <div class="vocab-header">
@@ -261,16 +303,46 @@ class VocabularyRecorder {
         </div>
       </div>
     `;
-    
+
     this.positionTooltip(rect);
     document.body.appendChild(this.tooltip);
-    
+
+    // 保存当前单词到tooltip的data属性中，防止丢失
+    this.tooltip.dataset.currentWord = this.selectedText;
+
     // 绑定按钮事件
-    this.tooltip.querySelector("#addToVocab").addEventListener("click", () => {
-      this.addWordToVocabulary();
+    this.tooltip.querySelector("#addToVocab").addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      e.stopImmediatePropagation();
+      console.log("=== 添加按钮被点击 ===");
+      console.log("当前selectedText:", this.selectedText);
+      console.log("Tooltip中保存的单词:", this.tooltip.dataset.currentWord);
+
+      // 使用保存的单词，防止selectedText被清空
+      const wordToAdd = this.tooltip.dataset.currentWord || this.selectedText;
+      if (wordToAdd) {
+        console.log("准备添加单词:", wordToAdd);
+        this.addWordToVocabulary(wordToAdd);
+      } else {
+        console.error("没有找到要添加的单词");
+        this.showErrorMessage();
+      }
     });
-    
-    this.tooltip.querySelector("#closeTooltip").addEventListener("click", () => {
+
+    // 为整个tooltip添加mouseup事件阻止，防止触发文本选择
+    this.tooltip.addEventListener("mouseup", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      e.stopImmediatePropagation();
+      console.log("Tooltip mouseup事件被阻止");
+    });
+
+    this.tooltip.querySelector("#closeTooltip").addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      e.stopImmediatePropagation();
+      console.log("关闭按钮被点击");
       this.hideTooltip();
     });
   }
@@ -345,17 +417,20 @@ class VocabularyRecorder {
       event.preventDefault();
       const selection = window.getSelection().toString().trim();
       if (selection && /^[a-zA-Z-']+$/.test(selection)) {
-        this.selectedText = selection.toLowerCase();
-        this.addWordToVocabulary();
+        const cleanWord = selection.toLowerCase();
+        this.selectedText = cleanWord;
+        this.addWordToVocabulary(cleanWord);
       }
     }
   }
   
   showSuccessMessage() {
+    console.log("显示成功消息");
     this.showMessage("✅ 已添加到生词本", "success");
   }
   
   showErrorMessage() {
+    console.log("显示错误消息");
     this.showMessage("❌ 添加失败", "error");
   }
   

@@ -356,6 +356,51 @@ class DictionaryService:
         # 所有API都失败时，返回fallback定义
         return DictionaryService.create_fallback_definition(word)
 
+    @staticmethod
+    def create_fallback_definition(word: str) -> WordDefinition:
+        """为找不到定义的单词创建基本信息"""
+        # 根据单词特征推测类型
+        pos_tag = "noun"  # 默认为名词
+        meaning = f"'{word}' - 词典中暂无此词条的详细释义"
+
+        # 识别一些常见的专有名词和技术词汇
+        tech_words = {
+            'javascript': ('JavaScript', 'noun', '一种广泛使用的编程语言，主要用于网页开发'),
+            'html': ('HTML', 'noun', '超文本标记语言，用于创建网页的标准标记语言'),
+            'css': ('CSS', 'noun', '层叠样式表，用于描述网页样式的样式表语言'),
+            'python': ('Python', 'noun', '一种高级编程语言，以其简洁和可读性著称'),
+            'react': ('React', 'noun', '用于构建用户界面的JavaScript库'),
+            'vue': ('Vue', 'noun', '渐进式JavaScript框架'),
+            'angular': ('Angular', 'noun', '基于TypeScript构建的Web应用框架'),
+            'nodejs': ('Node.js', 'noun', '基于Chrome V8引擎的JavaScript运行环境'),
+            'typescript': ('TypeScript', 'noun', 'JavaScript的超集，添加了类型系统'),
+            'github': ('GitHub', 'noun', '基于Git的代码托管平台'),
+            'api': ('API', 'noun', '应用程序编程接口'),
+            'json': ('JSON', 'noun', 'JavaScript对象表示法，轻量级数据交换格式'),
+            'sql': ('SQL', 'noun', '结构化查询语言，用于管理关系型数据库'),
+            'ai': ('AI', 'noun', '人工智能'),
+            'ml': ('ML', 'noun', '机器学习'),
+            'ui': ('UI', 'noun', '用户界面'),
+            'ux': ('UX', 'noun', '用户体验'),
+        }
+
+        word_lower = word.lower()
+        if word_lower in tech_words:
+            display_word, pos_tag, meaning = tech_words[word_lower]
+            word = display_word
+
+        return WordDefinition(
+            word=word,
+            pronunciation="",
+            definitions=[{
+                "partOfSpeech": pos_tag,
+                "meaning": meaning,
+                "example": ""
+            }],
+            examples=[],
+            pos_tags=pos_tag
+        )
+
 # 翻译服务类
 class TranslationService:
     @staticmethod
@@ -407,51 +452,6 @@ class TranslationService:
             return None
         
         return None
-    
-    @staticmethod
-    def create_fallback_definition(word: str) -> WordDefinition:
-        """为找不到定义的单词创建基本信息"""
-        # 根据单词特征推测类型
-        pos_tag = "noun"  # 默认为名词
-        meaning = f"'{word}' - 词典中暂无此词条的详细释义"
-        
-        # 识别一些常见的专有名词和技术词汇
-        tech_words = {
-            'javascript': ('JavaScript', 'noun', '一种广泛使用的编程语言，主要用于网页开发'),
-            'html': ('HTML', 'noun', '超文本标记语言，用于创建网页的标准标记语言'),
-            'css': ('CSS', 'noun', '层叠样式表，用于描述网页样式的样式表语言'),
-            'python': ('Python', 'noun', '一种高级编程语言，以其简洁和可读性著称'),
-            'react': ('React', 'noun', '用于构建用户界面的JavaScript库'),
-            'vue': ('Vue', 'noun', '渐进式JavaScript框架'),
-            'angular': ('Angular', 'noun', '基于TypeScript构建的Web应用框架'),
-            'nodejs': ('Node.js', 'noun', '基于Chrome V8引擎的JavaScript运行环境'),
-            'typescript': ('TypeScript', 'noun', 'JavaScript的超集，添加了类型系统'),
-            'github': ('GitHub', 'noun', '基于Git的代码托管平台'),
-            'api': ('API', 'noun', '应用程序编程接口'),
-            'json': ('JSON', 'noun', 'JavaScript对象表示法，轻量级数据交换格式'),
-            'sql': ('SQL', 'noun', '结构化查询语言，用于管理关系型数据库'),
-            'ai': ('AI', 'noun', '人工智能'),
-            'ml': ('ML', 'noun', '机器学习'),
-            'ui': ('UI', 'noun', '用户界面'),
-            'ux': ('UX', 'noun', '用户体验'),
-        }
-        
-        word_lower = word.lower()
-        if word_lower in tech_words:
-            display_word, pos_tag, meaning = tech_words[word_lower]
-            word = display_word
-        
-        return WordDefinition(
-            word=word,
-            pronunciation="",
-            definitions=[{
-                "partOfSpeech": pos_tag,
-                "meaning": meaning,
-                "example": ""
-            }],
-            examples=[],
-            pos_tags=pos_tag
-        )
 
 # API路由
 @app.get("/")

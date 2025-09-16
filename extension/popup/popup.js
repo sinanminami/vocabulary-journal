@@ -46,6 +46,23 @@ class PopupController {
       chrome.runtime.openOptionsPage();
       window.close();
     });
+
+    // 调试工具
+    document.getElementById("testAddWord").addEventListener("click", () => {
+      this.testAddWord();
+    });
+
+    document.getElementById("checkStatus").addEventListener("click", () => {
+      this.checkStatus();
+    });
+
+    document.getElementById("testChromeAPI").addEventListener("click", () => {
+      this.testChromeAPI();
+    });
+
+    document.getElementById("testDirectAPI").addEventListener("click", () => {
+      this.testDirectAPI();
+    });
     
     // 模态框
     document.getElementById("closeModal").addEventListener("click", () => {
@@ -358,6 +375,166 @@ class PopupController {
         resolve(settings || {});
       });
     });
+  }
+
+  // 调试工具方法
+  async testAddWord() {
+    const debugStatus = document.getElementById("debugStatus");
+    debugStatus.textContent = "测试中...";
+
+    try {
+      // 测试通过background script添加单词
+      const response = await new Promise((resolve, reject) => {
+        chrome.runtime.sendMessage({
+          type: "ADD_WORD",
+          word: "debugtest",
+          context: {
+            sourceUrl: "debug://popup",
+            sourceContext: "从popup调试工具添加的测试单词"
+          }
+        }, (response) => {
+          if (chrome.runtime.lastError) {
+            reject(new Error(chrome.runtime.lastError.message));
+            return;
+          }
+          resolve(response);
+        });
+      });
+
+      if (response.success) {
+        debugStatus.textContent = "✅ 通过background script添加成功";
+        debugStatus.style.color = "#10b981";
+        // 刷新数据
+        setTimeout(() => this.loadRecentWords(), 500);
+        setTimeout(() => this.loadStats(), 500);
+      } else {
+        debugStatus.textContent = `❌ Background script错误: ${response.error}`;
+        debugStatus.style.color = "#ef4444";
+      }
+    } catch (error) {
+      debugStatus.textContent = `❌ 通信错误: ${error.message}`;
+      debugStatus.style.color = "#ef4444";
+    }
+  }
+
+  async checkStatus() {
+    const debugStatus = document.getElementById("debugStatus");
+    debugStatus.textContent = "检查中...";
+
+    try {
+      // 检查后端连接
+      const backendResponse = await fetch(`${this.apiUrl}/api/words?limit=1`);
+      const backendOk = backendResponse.ok;
+
+      // 检查background script通信
+      const messageResponse = await new Promise((resolve, reject) => {
+        chrome.runtime.sendMessage({
+          type: "GET_SETTINGS"
+        }, (response) => {
+          if (chrome.runtime.lastError) {
+            reject(new Error(chrome.runtime.lastError.message));
+            return;
+          }
+          resolve(response);
+        });
+      });
+
+      const messageOk = messageResponse && messageResponse.success;
+
+      const status = [
+        `后端API: ${backendOk ? "✅" : "❌"}`,
+        `Background通信: ${messageOk ? "✅" : "❌"}`,
+        `API地址: ${this.apiUrl}`
+      ].join(" | ");
+
+      debugStatus.textContent = status;
+      debugStatus.style.color = (backendOk && messageOk) ? "#10b981" : "#ef4444";
+
+    } catch (error) {
+      debugStatus.textContent = `❌ 检查失败: ${error.message}`;
+      debugStatus.style.color = "#ef4444";
+    }
+  }
+
+  // 测试Chrome API可用性
+  testChromeAPI() {
+    const debugStatus = document.getElementById("debugStatus");
+
+    try {
+      if (typeof chrome === 'undefined') {
+        debugStatus.textContent = "❌ chrome对象不存在";
+        debugStatus.style.color = "#ef4444";
+        return;
+      }
+
+      const results = [];
+      results.push(`chrome: ✅`);
+
+      if (chrome.runtime) {
+        results.push(`runtime: ✅ (ID: ${chrome.runtime.id})`);
+      } else {
+        results.push(`runtime: ❌`);
+      }
+
+      if (chrome.storage) {
+        results.push(`storage: ✅`);
+      } else {
+        results.push(`storage: ❌`);
+      }
+
+      if (chrome.tabs) {
+        results.push(`tabs: ✅`);
+      } else {
+        results.push(`tabs: ❌`);
+      }
+
+      debugStatus.textContent = results.join(" | ");
+      debugStatus.style.color = "#10b981";
+
+    } catch (error) {
+      debugStatus.textContent = `❌ API检查失败: ${error.message}`;
+      debugStatus.style.color = "#ef4444";
+    }
+  }
+
+  // 测试直接API调用
+  async testDirectAPI() {
+    const debugStatus = document.getElementById("debugStatus");
+    debugStatus.textContent = "测试直接API...";
+
+    try {
+      const testWord = `popup_test_${Date.now()}`;
+
+      const response = await fetch(`${this.apiUrl}/api/words`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          word: testWord,
+          source_url: 'popup-test',
+          source_context: '扩展弹窗直接API测试',
+          personal_notes: ''
+        })
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        debugStatus.textContent = `✅ 直接API成功，ID: ${result.id}，单词: ${result.word}`;
+        debugStatus.style.color = "#10b981";
+
+        // 刷新数据
+        setTimeout(() => this.loadRecentWords(), 300);
+        setTimeout(() => this.loadStats(), 300);
+      } else {
+        const errorText = await response.text();
+        debugStatus.textContent = `❌ API失败: ${response.status} - ${errorText}`;
+        debugStatus.style.color = "#ef4444";
+      }
+    } catch (error) {
+      debugStatus.textContent = `❌ 网络错误: ${error.message}`;
+      debugStatus.style.color = "#ef4444";
+    }
   }
 }
 
